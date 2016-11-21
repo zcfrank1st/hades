@@ -1,0 +1,3 @@
+rootProject.name = 'hades'
+
+include 'hades-core', 'hades-client', 'hades-web'
