@@ -11,7 +11,9 @@ subprojects {
         mavenCentral()
     }
     dependencies {
-        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+        compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.7'
+        compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
 }
@@ -37,6 +39,7 @@ project(':hades-client') {
 project(':hades-web') {
     dependencies {
         compile project(':hades-core')
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
 
         compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.2.RELEASE'
         testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE'
