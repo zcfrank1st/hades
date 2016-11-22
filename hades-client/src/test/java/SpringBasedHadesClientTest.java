@@ -22,5 +22,7 @@ public class SpringBasedHadesClientTest {
     @Test
     public void getConfig () {
         Assert.assertEquals(springBasedHadesClient.getOrElse("qq", ""), "");
+
+//        Assert.assertEquals(springBasedHadesClient.getOrElse("key1", ""), "hello world");
     }
 }

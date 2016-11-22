@@ -16,5 +16,7 @@ public class ConfigBasedHadesClientTest {
     @Test
     public void getConfig() {
         Assert.assertEquals(configBasedHadesClient.getOrElse("q", ""), "");
+
+//        Assert.assertEquals(configBasedHadesClient.getOrElse("key1", ""), "hello world");
     }
 }
