@@ -8,6 +8,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class HadesNameSpaceHandlerSupport extends NamespaceHandlerSupport {
     @Override
     public void init() {
-        registerBeanDefinitionParser("hades", new HadesParser());
+        registerBeanDefinitionParser("client", new HadesParser());
     }
 }

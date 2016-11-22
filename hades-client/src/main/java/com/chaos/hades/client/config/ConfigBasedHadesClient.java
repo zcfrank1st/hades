@@ -16,7 +16,7 @@ public class ConfigBasedHadesClient {
         Config conf = ConfigFactory.load();
         String env = System.getProperty("hades.env");
 
-        if (env.equals("prod")) {
+        if (null != env && env.equals("prod")) {
             this.client = new DefaultHadesClient(conf.getString("hades.connections"), HadesProfile.PRD, conf.getString("hades.app"));
         } else {
             this.client = new DefaultHadesClient(conf.getString("hades.connections"), HadesProfile.DEV, conf.getString("hades.app"));

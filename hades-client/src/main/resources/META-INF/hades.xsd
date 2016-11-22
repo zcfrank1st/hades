@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:beans="http://www.springframework.org/schema/beans"
         xmlns="http://www.chaos.com/schema/hades"
         targetNamespace="http://www.chaos.com/schema/hades"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified">
 
-    <xs:import namespace="http://www.springframework.org/schema/beans" />
+    <xsd:import namespace="http://www.springframework.org/schema/beans" />
 
-    <xs:element name="hades">
-        <!-- TODO -->
-    </xs:element>
-</xs:schema>
+    <xsd:element name="client">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                    <xsd:attribute name="app" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>项目名</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+
+                    <xsd:attribute name="connections" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>zk连接串</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
