@@ -1,6 +1,5 @@
 plugins {
     id "org.springframework.boot" version "1.4.2.RELEASE"
-//    id "org.inferred.processors" version "1.2.3"
 }
 
 subprojects {
@@ -20,7 +19,6 @@ subprojects {
 project(':hades-core') {
     dependencies {
         compile group: 'org.apache.curator', name: 'curator-framework', version: '2.11.0'
-//        compile group: 'org.inferred', name: 'freebuilder', version: '1.10.5'
         compile group: 'com.google.guava', name: 'guava', version: '19.0'
     }
 }
