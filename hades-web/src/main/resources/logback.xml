@@ -7,21 +7,21 @@
     </appender>
 
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/opt/logs/hades-web.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <FileNamePattern>/opt/logs/hades-web.%d{yyyy-MM-dd}.log</FileNamePattern>
-        </rollingPolicy>
+    <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<File>/opt/logs/hades-web.log</File>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
+            <!--<FileNamePattern>/opt/logs/hades-web.%d{yyyy-MM-dd}.log</FileNamePattern>-->
+        <!--</rollingPolicy>-->
 
-        <encoder>
-            <Pattern>%d [%thread] %-5level %logger{36} - %M - %msg%n</Pattern>
-        </encoder>
-    </appender>
+        <!--<encoder>-->
+            <!--<Pattern>%d [%thread] %-5level %logger{36} - %M - %msg%n</Pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
 
     <root level="debug">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+        <!--<appender-ref ref="FILE" />-->
     </root>
 
 </configuration>
