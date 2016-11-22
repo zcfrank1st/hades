@@ -18,17 +18,23 @@ public class HadesService {
     @Autowired
     private ConfigLoader loader;
 
+    public boolean existsProject(String project) throws Exception {
+        Hades hades = new Hades.HadesBuilder().connections(loader.config.getString(CONNECTION_STINGS)).build();
+        boolean res = hades.existProject(project);
+        hades.destroy();
+
+        return res;
+    }
+
     public void initProjectSkeleton(String project) throws Exception {
         Hades hades = new Hades.HadesBuilder().connections(loader.config.getString(CONNECTION_STINGS)).build();
-        if (!hades.existProject(project))
-            hades.initProject(project);
+        hades.initProject(project);
         hades.destroy();
     }
 
     public void deleteProjectSkeleton(String project) throws Exception {
         Hades hades = new Hades.HadesBuilder().connections(loader.config.getString(CONNECTION_STINGS)).build();
-        if (hades.existProject(project))
-            hades.deleteProject(project);
+        hades.deleteProject(project);
         hades.destroy();
     }
 

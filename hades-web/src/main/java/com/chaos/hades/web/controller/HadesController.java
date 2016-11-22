@@ -15,6 +15,11 @@ public class HadesController {
     @Autowired
     private HadesService hadesService;
 
+    @RequestMapping(value = "/config/{project}", method = RequestMethod.GET)
+    public ResponseEntity existsProject(@PathVariable("project") String project) throws Exception {
+        return ResponseEntity.ok(hadesService.existsProject(project));
+    }
+
     @RequestMapping(value = "/config/skeleton", method = RequestMethod.POST)
     public ResponseEntity initProjectSkeleton(@RequestBody String project) throws Exception {
         hadesService.initProjectSkeleton(project);
