@@ -4,6 +4,10 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by zcfrank1st on 21/11/2016.
  */
@@ -13,13 +17,14 @@ public class Hades { // dev profile default
     private static final String CODEC = "UTF-8";
 
     private CuratorFramework curator;
-    private HadesProfile profile;
+    private HadesProfile profile = HadesProfile.DEV;
 
     private Hades (String connections) {
         this.curator = CuratorFrameworkFactory.builder()
                 .connectString(connections)
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
                 .build();
+        this.curator.start();
     }
 
     public static class HadesBuilder {
@@ -41,93 +46,94 @@ public class Hades { // dev profile default
     }
 
     public void initProject (String project) throws Exception {
-        try {
-            curator.start();
-            curator.create().forPath("/" + ENV_DEV + "/" + project);
-            curator.create().forPath("/" + ENV_PROD + "/" + project);
-        } finally {
-            curator.close();
-        }
+        curator.create().creatingParentsIfNeeded().forPath("/" + ENV_DEV + "/" + project);
+        curator.create().creatingParentsIfNeeded().forPath("/" + ENV_PROD + "/" + project);
     }
 
     public void deleteProject (String project) throws Exception {
-        try {
-            curator.start();
-            curator.delete().forPath("/"+ ENV_DEV + "/" + project);
-            curator.delete().forPath("/" + ENV_PROD + "/" + project);
-        } finally {
-            curator.close();
-        }
+        curator.delete().deletingChildrenIfNeeded().forPath("/"+ ENV_DEV + "/" + project);
+        curator.delete().deletingChildrenIfNeeded().forPath("/" + ENV_PROD + "/" + project);
     }
 
     public void addConf (String project, String key, String value) throws Exception {
-        try {
-            curator.start();
-            switch (profile) {
-                case PRD:
-                    curator.create().forPath("/" + ENV_PROD +"/" + project + "/" + key, value.getBytes(CODEC));
-                    break;
-                case DEV:
-                default:
-                    curator.create().forPath("/" + ENV_DEV + "/" + project + "/" + key, value.getBytes(CODEC));
-                    break;
-            }
-        } finally {
-            curator.close();
+        switch (profile) {
+            case PRD:
+                curator.create().forPath("/" + ENV_PROD +"/" + project + "/" + key, value.getBytes(CODEC));
+                break;
+            case DEV:
+            default:
+                curator.create().forPath("/" + ENV_DEV + "/" + project + "/" + key, value.getBytes(CODEC));
+                break;
         }
     }
 
     public void deleteConf(String project, String key) throws Exception {
-        try {
-            curator.start();
-
-            switch (profile) {
-                case PRD:
-                    curator.delete().forPath("/" + ENV_PROD + "/" + project + "/" + key);
-                    break;
-                case DEV:
-                default:
-                    curator.delete().forPath("/" + ENV_DEV + "/" + project + "/" + key);
-                    break;
-            }
-        } finally {
-            curator.close();
+        switch (profile) {
+            case PRD:
+                curator.delete().forPath("/" + ENV_PROD + "/" + project + "/" + key);
+                break;
+            case DEV:
+            default:
+                curator.delete().forPath("/" + ENV_DEV + "/" + project + "/" + key);
+                break;
         }
     }
 
     public void updateConf(String project, String key, String value) throws Exception {
-        try {
-            curator.start();
-            switch (profile) {
-                case PRD:
-                    curator.setData().forPath("/" + ENV_PROD + "/" + project + "/" + key, value.getBytes(CODEC));
-                    break;
-                case DEV:
-                default:
-                    curator.setData().forPath("/" + ENV_DEV + "/" + project + "/" + key, value.getBytes(CODEC));
-                    break;
-            }
-        } finally {
-            curator.close();
+        switch (profile) {
+            case PRD:
+                curator.setData().forPath("/" + ENV_PROD + "/" + project + "/" + key, value.getBytes(CODEC));
+                break;
+            case DEV:
+            default:
+                curator.setData().forPath("/" + ENV_DEV + "/" + project + "/" + key, value.getBytes(CODEC));
+                break;
         }
     }
 
-    public String getConfOrElse (String project, String key, String other) throws Exception {
-        try {
-            curator.start();
-            byte[] data;
-            switch (profile) {
-                case PRD:
-                    data = curator.getData().forPath("/" + ENV_PROD + "/" + project + "/" + key);
-                    break;
-                case DEV:
-                default:
-                    data = curator.getData().forPath("/" + ENV_DEV + "/" + project + "/" + key);
-                    break;
-            }
-            return null == data ? other : new String(data, CODEC);
-        } finally {
-            curator.close();
+    public String getConf (String project, String key) throws Exception {
+        byte[] data;
+        switch (profile) {
+            case PRD:
+                data = curator.getData().forPath("/" + ENV_PROD + "/" + project + "/" + key);
+                break;
+            case DEV:
+            default:
+                data = curator.getData().forPath("/" + ENV_DEV + "/" + project + "/" + key);
+                break;
         }
+        return null == data ? null : new String(data, CODEC);
+    }
+
+    public Map<String, String> scanProjectConf(String project) throws Exception {
+        Map<String, String> projectConfs = new HashMap<>();
+        switch (profile) {
+            case PRD:
+                String prodPath = "/" + ENV_PROD + "/" + project;
+                List<String> projectPrdConfKeys = curator.getChildren().forPath(prodPath);
+
+                for (String key: projectPrdConfKeys) {
+                    byte[] data = curator.getData().forPath(prodPath + "/" + key);
+                    projectConfs.put(key, data == null ? null : new String(data, CODEC));
+                }
+
+                break;
+            case DEV:
+            default:
+                String devPath = "/" + ENV_DEV + "/" + project;
+                List<String> projectDevConfKeys = curator.getChildren().forPath(devPath);
+
+                for (String key: projectDevConfKeys) {
+                    byte[] data = curator.getData().forPath(devPath + "/" + key);
+                    projectConfs.put(key, data == null ? null : new String(data, CODEC));
+                }
+                break;
+        }
+
+        return projectConfs;
+    }
+
+    public void destroy() {
+        this.curator.close();
     }
 }
