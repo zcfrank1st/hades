@@ -15,8 +15,12 @@ import java.util.Map;
 @Service
 public class HadesService {
     private static final String CONNECTION_STINGS = "hades.connections";
+    private final ConfigLoader loader;
+
     @Autowired
-    private ConfigLoader loader;
+    public HadesService(ConfigLoader loader) {
+        this.loader = loader;
+    }
 
     public boolean existsProject(String project) throws Exception {
         Hades hades = new Hades.HadesBuilder().connections(loader.config.getString(CONNECTION_STINGS)).build();
