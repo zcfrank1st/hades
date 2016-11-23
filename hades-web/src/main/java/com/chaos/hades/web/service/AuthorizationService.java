@@ -28,7 +28,7 @@ public class AuthorizationService {
 
     public int getGitlabProjectAccessLevel(String privateToken, String projectPath, String username) throws IOException {
         String result = Request
-                .Get(configLoader.config.getString("gitlab.project.api") + projectPath.replace("\\/", "%2F") + "/members")
+                .Get(configLoader.config.getString("gitlab.project.api") + projectPath.replace("/", "%2F") + "/members")
                 .addHeader("PRIVATE-TOKEN", privateToken)
                 .execute()
                 .returnContent()
