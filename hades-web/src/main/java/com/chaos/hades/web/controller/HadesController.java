@@ -43,7 +43,7 @@ public class HadesController {
                 break;
             case CLIENT:
                 message.setCode(1);
-                message.setBody(null);
+                message.setBody(hadesService.existsProject(project));
                 message.setMessage("no permission");
                 break;
         }
