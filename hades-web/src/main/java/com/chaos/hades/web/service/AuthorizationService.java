@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -45,8 +46,9 @@ public class AuthorizationService {
         return 0;
     }
 
-    public String maskValue(String value) {
-        return valueWithSalts(value.length());
+    public Map<String, String> maskValue(Map<String, String> kvs) {
+        kvs.forEach((k, v) -> kvs.put(k, valueWithSalts(v.length())));
+        return kvs;
     }
 
     private String valueWithSalts (int length) {

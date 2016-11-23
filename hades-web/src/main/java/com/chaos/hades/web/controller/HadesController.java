@@ -176,9 +176,9 @@ public class HadesController {
                 message.setMessage("ok");
                 break;
             case CLIENT:
-                message.setCode(1);
-                message.setBody(null);
-                message.setMessage("no permission");
+                message.setCode(0);
+                message.setBody(authorizationService.maskValue(hadesService.scanConfigs(project, env)));
+                message.setMessage("ok");
                 break;
         }
 
