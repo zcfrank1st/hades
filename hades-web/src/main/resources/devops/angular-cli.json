@@ -19,11 +19,10 @@
       "mobile": false,
       "styles": [
         "styles.css",
-        "../semantic/semantic.min.css"
+        "../libs/bootstrap4/css/bootstrap.min.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js",
-        "../semantic/semantic.min.js"
+        "..//libs/bootstrap4/js/bootstrap.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
