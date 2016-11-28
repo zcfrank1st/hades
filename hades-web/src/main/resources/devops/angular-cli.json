@@ -19,10 +19,13 @@
       "mobile": false,
       "styles": [
         "styles.css",
-        "../libs/bootstrap4/css/bootstrap.min.css"
+        "../libs/bootstrap/css/bootstrap.min.css",
+        "../libs/tether/css/tether.min.css"
       ],
       "scripts": [
-        "..//libs/bootstrap4/js/bootstrap.min.js"
+        "../libs/jquery/jquery-3.1.1.min.js",
+        "../libs/tether/js/tether.min.js",
+        "../libs/bootstrap/js/bootstrap.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

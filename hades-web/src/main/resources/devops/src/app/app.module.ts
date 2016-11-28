@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ManageComponent } from './manage/manage.component';
 import { DispatcherComponent } from './dispatcher/dispatcher.component';
+import { BlankComponent } from './blank/blank.component';
 
 const appRoutes: Routes = [
   {
@@ -19,7 +20,8 @@ const appRoutes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   { path: 'manage', component: ManageComponent },
-  { path: 'dispatcher', component: DispatcherComponent }
+  { path: 'dispatcher', component: DispatcherComponent },
+  { path: 'blank', component: BlankComponent }
 ];
 
 @NgModule({
@@ -27,7 +29,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     ManageComponent,
-    DispatcherComponent
+    DispatcherComponent,
+    BlankComponent
   ],
   imports: [
     BrowserModule,
