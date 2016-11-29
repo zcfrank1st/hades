@@ -1,4 +1,7 @@
 Hades
 ====
 
-zk based config center
+zookeeper based config center
+
+TODO
+
