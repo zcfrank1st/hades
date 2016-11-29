@@ -1,8 +1,12 @@
 plugins {
-    id "org.springframework.boot" version "1.4.2.RELEASE"
+    id "org.springframework.boot" version "1.4.2.RELEASE" apply false
 }
 
-subprojects {
+subprojects { subproject ->
+    if (subproject.name.startsWith("hades-web")) {
+        apply plugin: 'org.springframework.boot'
+    }
+
     group 'com.chaos'
     version '1.0-SNAPSHOT'
     apply plugin: 'java'
