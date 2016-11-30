@@ -176,7 +176,7 @@ public class HadesController {
                 message.setMessage("ok");
                 break;
             case CLIENT:
-                message.setCode(0);
+                message.setCode(1);
                 message.setBody(authorizationService.maskValue(hadesService.scanConfigs(project, env)));
                 message.setMessage("ok");
                 break;
