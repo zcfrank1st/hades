@@ -24,4 +24,4 @@ Hades
 * TODO
 
     * USE zk watch to hot-swap config values
-
+    * restful client
