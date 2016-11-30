@@ -15,11 +15,11 @@ Hades
 
 * Usage
 
-using `gradle 3.2.1` to build and seeing `test` folder to see how to use.
+    using `gradle 3.2.1` to build and seeing `test` folder to see how to use.
 
 * LICENCE
 
-MIT LICENCE
+    MIT LICENCE
 
 * TODO
 
