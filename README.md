@@ -2,7 +2,7 @@ Hades
 ====
 > A zookeeper based config center.
 
-![](http://https://raw.githubusercontent.com/zcfrank1st/hades/master/logo/hades.png)
+![](https://raw.githubusercontent.com/zcfrank1st/hades/master/logo/hades.png)
     
 
 * Description
