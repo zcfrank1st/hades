@@ -19,12 +19,15 @@ Hades
     > 项目使用`gradle 3.2.1` 编译
     
     [hades-core]
+    
         基本不单独使用，为后续模块提供核心功能
     
     [hades-client]
+    
         使用方式见hades-client模块test目录示例
     
     [hades-restful-client]
+    
         获取配置：
         Request： GET /config/{env}/{project}/{key}
         Response： 
@@ -34,6 +37,7 @@ Hades
         }
         
     [hades-web]
+    
         基本不单独使用，为[hades-chrome-extension]项目提供后端服务
         
         
