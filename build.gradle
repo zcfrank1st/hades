@@ -7,9 +7,15 @@ subprojects { subproject ->
         apply plugin: 'org.springframework.boot'
     }
 
+    if (subproject.name.startsWith("hades-restful-client")) {
+        apply plugin: 'scala'
+        apply plugin: "application"
+    } else {
+        apply plugin: 'java'
+    }
+
     group 'com.chaos'
     version '1.0-SNAPSHOT'
-    apply plugin: 'java'
     sourceCompatibility = 1.8
     repositories {
         mavenCentral()
@@ -17,6 +23,7 @@ subprojects { subproject ->
     dependencies {
         compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.7'
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+        compile group: 'com.typesafe', name: 'config', version: '1.3.1'
 
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
@@ -31,7 +38,6 @@ project(':hades-core') {
 project(':hades-client') {
     dependencies {
         compile project(':hades-core')
-        compile group: 'com.typesafe', name: 'config', version: '1.3.1'
         compile group: 'org.springframework', name: 'spring-beans', version: '4.3.4.RELEASE'
 
         testCompile group: 'org.springframework', name: 'spring-core', version: '4.3.4.RELEASE'
@@ -39,16 +45,29 @@ project(':hades-client') {
     }
 }
 
+project(':hades-restful-client') {
+    dependencies {
+        compile project(':hades-core')
+        compile "com.typesafe.scala-logging:scala-logging_2.11:3.5.0"
+
+        compile "org.scala-lang:scala-library:2.11.8"
+        compile "org.scala-lang:scala-compiler:2.11.8"
+        compile "org.scala-lang:scala-reflect:2.11.8"
+
+        compile "com.typesafe.akka:akka-http-experimental_2.11:2.4.11"
+        compile "com.typesafe.akka:akka-http-spray-json-experimental_2.11:2.4.11"
+    }
+
+    mainClassName = "com.chaos.hades.restful.RestfulService"
+}
+
 project(':hades-web') {
     dependencies {
         compile project(':hades-core')
         compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
 
-        compile group: 'com.typesafe', name: 'config', version: '1.3.1'
         compile group: 'com.google.guava', name: 'guava', version: '19.0'
         compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
-
-
 
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
         compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
