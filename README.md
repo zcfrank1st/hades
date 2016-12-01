@@ -1,27 +1,47 @@
 Hades
 ====
-> A zookeeper based config center.
+> 基于zookeeper的配置中心
 
 ![](https://raw.githubusercontent.com/zcfrank1st/hades/master/logo/hades.png)
     
 
-* Description
+* 描述
 
-    **hades-core:** the core of Hades
+    **hades-core:** hades项目的核心模块
 
-    **hades-client:** the spring and file based client
+    **hades-client:** 基于spring的hades客户端和基于配置文件的hades客户端
+    
+    **hades-restful-client:** 提供restful接口获取配置
 
-    **hades-web:** for [hades-chrome-extension](https://github.com/zcfrank1st/hades-chrome-extension) to use
+    **hades-web:** 供 [hades-chrome-extension](https://github.com/zcfrank1st/hades-chrome-extension) 使用
 
-* Usage
-
-    using `gradle 3.2.1` to build and seeing `test` folder to see how to use.
-
+* 如何使用
+    > 项目使用`gradle 3.2.1` 编译
+    
+    [hades-core]
+        基本不单独使用，为后续模块提供核心功能
+    
+    [hades-client]
+        使用方式见hades-client模块test目录示例
+    
+    [hades-restful-client]
+        获取配置：
+        Request： GET /config/{env}/{project}/{key}
+        Response： 
+        {
+            "code": int,  // 0 成功 1 失败
+            "value": string // 正常配置或““
+        }
+        
+    [hades-web]
+        基本不单独使用，为[hades-chrome-extension]项目提供后端服务
+        
+        
+    
 * LICENCE
 
-    MIT LICENCE
+    MIT
 
 * TODO
 
-    * USE zk watch to hot-swap config values
-    * restful client
+    * 使用zookeeper的watch机制，热更新配置
