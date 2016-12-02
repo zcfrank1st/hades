@@ -17,7 +17,7 @@ object RestfulService extends JsonSupport with ConfigModule {
   val mainLogger = Logger("hades-restful")
   val connections = config.getString("hades.connections")
 
-  val route =
+  val getConfigRouter =
     pathPrefix ("config" / Segment / Segment / Segment) { (env, project, key) =>
       path ("") {
         get {
@@ -44,6 +44,34 @@ object RestfulService extends JsonSupport with ConfigModule {
       }
     }
 
+  val getAllConfigsRouter =
+    pathPrefix("configs" / Segment / Segment) { (env, project) =>
+      path("") {
+        get {
+          try {
+            val hades = new HadesBuilder().connections(connections).build()
+            if ("prod" == env) {
+              hades.profile(HadesProfile.PRD)
+            } else {
+              hades.profile(HadesProfile.DEV)
+            }
+            import scala.collection.JavaConverters._
+            val value = hades.scanProjectConf(project).asScala
+            hades.destroy()
+            complete {
+              MapMessage[String](0, value.toMap)
+            }
+          } catch {
+            case e: Throwable =>
+              mainLogger.error(s"error request ${e.getMessage}")
+              complete {
+                MapMessage[String](1, Map())
+              }
+          }
+        }
+      }
+    }
+
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem("hades-restful")
     implicit val materializer = ActorMaterializer()
@@ -52,7 +80,7 @@ object RestfulService extends JsonSupport with ConfigModule {
 
     val port = config.getInt("hades.restful.port")
 
-    val bindingFuture = Http().bindAndHandle(route, "0.0.0.0", port)
+    val bindingFuture = Http().bindAndHandle(getConfigRouter ~ getAllConfigsRouter, "0.0.0.0", port)
 
     mainLogger.info(s"Server is running on port " + port  + " ... Press RETURN to stop...")
 
