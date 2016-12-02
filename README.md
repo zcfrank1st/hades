@@ -28,12 +28,20 @@ Hades
     
     [hades-restful-client]
     
-        获取配置：
-        Request： GET /config/{env}/{project}/{key}
+        获取特定配置：
+        Request： GET /config/{env}/{project}/{key}/
         Response： 
         {
             "code": int,  // 0 成功 1 失败
             "value": string // 正常配置或““
+        }
+        
+        获取特定环境项目的全部配置：
+        Request: GET /configs/{env}/{project}/
+        Response:
+        {
+            "code": int, // 0 成功 1 失败
+            "value": map
         }
         
     [hades-web]
