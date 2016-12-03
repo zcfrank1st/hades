@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by zcfrank1st on 22/11/2016.
  */
-public class DefaultHadesClient {
+public class DefaultHadesClient implements HadesClient {
     private Map<String, String> configs = new HashMap<>();
 
     public DefaultHadesClient(String connectionStrings, HadesProfile profile, String project) throws Exception {

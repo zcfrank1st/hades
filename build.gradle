@@ -38,6 +38,8 @@ project(':hades-core') {
 project(':hades-client') {
     dependencies {
         compile project(':hades-core')
+        compile group: 'org.apache.curator', name: 'curator-recipes', version: '2.11.0'
+
         compile group: 'org.springframework', name: 'spring-beans', version: '4.3.4.RELEASE'
 
         testCompile group: 'org.springframework', name: 'spring-core', version: '4.3.4.RELEASE'
