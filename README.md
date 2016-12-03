@@ -28,6 +28,8 @@ Hades
     
     [hades-restful-client]
     
+        使用 gradle :hades-restful-client:distZip 编译可执行 jar
+    
         获取特定配置：
         Request： GET /config/{env}/{project}/{key}/
         Response： 
@@ -45,6 +47,8 @@ Hades
         }
         
     [hades-web]
+    
+        使用 gradle :hades-web:bootRepackage 编译可执行 jar
     
         基本不单独使用，为[hades-chrome-extension]项目提供后端服务
         
