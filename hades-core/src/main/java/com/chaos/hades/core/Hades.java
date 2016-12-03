@@ -46,11 +46,7 @@ public class Hades { // dev profile default
     }
 
     public boolean existProject(String project) throws Exception {
-        if (curator.checkExists().forPath("/" + ENV_DEV + "/" + project) != null && curator.checkExists().forPath("/" + ENV_PROD + "/" + project) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return curator.checkExists().forPath("/" + ENV_DEV + "/" + project) != null && curator.checkExists().forPath("/" + ENV_PROD + "/" + project) != null;
     }
 
     public void initProject (String project) throws Exception {
@@ -139,6 +135,10 @@ public class Hades { // dev profile default
         }
 
         return projectConfs;
+    }
+
+    public CuratorFramework getCurator() {
+        return this.curator;
     }
 
     public void destroy() {
