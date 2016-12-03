@@ -58,6 +58,3 @@ Hades
 
     MIT
 
-* TODO
-
-    * 使用zookeeper的watch机制，热更新配置
