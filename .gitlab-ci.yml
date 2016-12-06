@@ -1,30 +1,31 @@
 variables:
+  #包名
+  PACKAGE_NAME: "hades-web.jar"
+  #包路径(相对于项目根目录,以/开头)
+  PACKAGE_PATH: "/hades-web/build/libs"
   #docker镜像私服地址(dev环境)
   DOCKER_REPOSITORY_DEV: "192.168.33.211:5000"
   #docker镜像私服地址(prd环境)
   DOCKER_REPOSITORY_PRD: "***.***.***.***:5000"
-  #rancher服务地址
-  RANCHER_URL: "http://192.168.33.221:8080/"
-  #rancher环境访问用户，用于远程操作
-  RANCHER_ACCESS_KEY: "8FFBE33462AE5F245A5F"
-  #rancher环境访问秘钥，用于远程操作
-  RANCHER_SECRET_KEY: "MpXXvnLKamrv8uhfkBz7KNbFx1axdNv3EncXsZG9"
   #启动服务的容器数量
   CONTAINER_SCALE: "1"
   #LB开放端口号（LB数量和ip根据rancher已定死，不可配置）
   EXPORT_LB_PORT: "1234"
   #容器侧访问端口号
   CONTAINER_SERVICE_PORT: "8080"
-  #包名
-  PACKAGE_NAME: "hades-web.jar"
-  #包路径(相对于项目根目录,以/开头)
-  PACKAGE_PATH: "/hades-web/build/libs"
+  #rancher服务地址
+  RANCHER_URL: "http://192.168.33.221:8080/"
+  #rancher环境访问用户，用于远程操作
+  RANCHER_ACCESS_KEY: "8FFBE33462AE5F245A5F"
+  #rancher环境访问秘钥，用于远程操作
+  RANCHER_SECRET_KEY: "MpXXvnLKamrv8uhfkBz7KNbFx1axdNv3EncXsZG9"
 
 stages:
   - package
   - build_push_image
   - deploy
   - up_lb
+
 
 #dev environment
 package_dev:
@@ -124,7 +125,8 @@ package_prd:
     name: prd
   when: manual
   script:
-    - mvn clean package -Dmaven.test.skip=true
+    - gradle :hades-web:clean
+    - gradle :hades-web:bootRepackage
   cache:
     paths:
       - .$PACKAGE_PATH/$PACKAGE_NAME
