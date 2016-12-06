@@ -54,148 +54,148 @@ build_image_dev:
     - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
     - docker push $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME
 
-#deploy_dev:
-#  stage: deploy
-#  only:
-#    - test
-#  environment:
-#    name: dev
-#  when: manual
-#  script:
-#    - cd /opt/rancher-compose/
-#    - rm -rf $CI_PROJECT_NAME
-#    - mkdir $CI_PROJECT_NAME
-#    - cd $CI_PROJECT_NAME
-#    - echo "$CI_PROJECT_NAME:" > docker.yml
-#    - echo "  labels:" >> docker.yml
-#    - echo -e "    io.rancher.container.pull_image:\talways" >> docker.yml
-#    - echo -e "  tty:\ttrue" >> docker.yml
-#    - echo -e "  image:\t$DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME" >> docker.yml
-#    - echo -e "  stdin_open:\ttrue" >> docker.yml
-#    - echo "$CI_PROJECT_NAME:" > rancher.yml
-#    - echo -e "  scale:\t$CONTAINER_SCALE" >> rancher.yml
-#    - ../rancher-compose -f docker.yml -r rancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
-#
-#up_lb_dev:
-#  stage: up_lb
-#  only:
-#    - test
-#  environment:
-#    name: dev
-#  when: manual
-#  script:
-#    - cd /opt/rancher-compose/lb
-#    - rm -rf $CI_PROJECT_NAME
-#    - mkdir $CI_PROJECT_NAME
-#    - cd $CI_PROJECT_NAME
-#    - echo -e "lb-$CI_PROJECT_NAME:" > LBdocker.yml
-#    - echo -e "  ports:" >> LBdocker.yml
-#    - echo -e "  - $EXPORT_LB_PORT:$CONTAINER_SERVICE_PORT" >> LBdocker.yml
-#    - echo -e "  labels:" >> LBdocker.yml
-#    - echo -e "    io.rancher.scheduler.affinity:host_label:\tlb=true" >> LBdocker.yml
-#    - echo -e "  tty:\ttrue" >> LBdocker.yml
-#    - echo -e "  image:\trancher/load-balancer-service" >> LBdocker.yml
-#    - echo -e "  links:" >> LBdocker.yml
-#    - echo -e "  - $CI_PROJECT_NAME:$CI_PROJECT_NAME" >> LBdocker.yml
-#    - echo -e "  stdin_open:\ttrue" >> LBdocker.yml
-#    - echo -e "lb-$CI_PROJECT_NAME:" >> LBrancher.yml
-#    - echo -e "  scale:\t1" >> LBrancher.yml
-#    - echo -e "  load_balancer_config:" >> LBrancher.yml
-#    - echo -e "    haproxy_config:\t{}" >> LBrancher.yml
-#    - echo -e "  health_check:" >> LBrancher.yml
-#    - echo -e "    port:\t42" >> LBrancher.yml
-#    - echo -e "    interval:\t2000" >> LBrancher.yml
-#    - echo -e "    unhealthy_threshold:\t3" >> LBrancher.yml
-#    - echo -e "    healthy_threshold:\t2" >> LBrancher.yml
-#    - echo -e "    response_timeout:\t2000" >> LBrancher.yml
-#    - ../../rancher-compose -f LBdocker.yml -r LBrancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
-#
-#
-##prd environment
-#package_prd:
-#  stage: package
-#  only:
-#    - master
-#  environment:
-#    name: prd
-#  when: manual
-#  script:
-#    - mvn clean package -Dmaven.test.skip=true
-#  cache:
-#    paths:
-#      - ./target/*.jar
-#  artifacts:
-#    paths:
-#      - ./target/*.jar
-#
-#build_image_prd:
-#  stage: build_push_image
-#  only:
-#    - master
-#  environment:
-#    name: prd
-#  when: manual
-#  script:
-#    - cd /$CI_PROJECT_DIR/target/
-#    - echo "FROM openjdk:8-jre" > dockerfile
-#    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
-#    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
-#    - docker build --no-cache -t $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME .
-#    - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
-#    - docker push $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME
-#
-#deploy_prd:
-#  stage: deploy
-#  only:
-#    - master
-#  environment:
-#    name: prd
-#  when: manual
-#  script:
-#    - cd /opt/rancher-compose/
-#    - rm -rf $CI_PROJECT_NAME
-#    - mkdir $CI_PROJECT_NAME
-#    - cd $CI_PROJECT_NAME
-#    - echo "$CI_PROJECT_NAME:" > docker.yml
-#    - echo "  labels:" >> docker.yml
-#    - echo -e "    io.rancher.container.pull_image:\talways" >> docker.yml
-#    - echo -e "  tty:\ttrue" >> docker.yml
-#    - echo -e "  image:\t$DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME" >> docker.yml
-#    - echo -e "  stdin_open:\ttrue" >> docker.yml
-#    - echo "$CI_PROJECT_NAME:" > rancher.yml
-#    - echo -e "  scale:\t$CONTAINER_SCALE" >> rancher.yml
-#    - ../rancher-compose -f docker.yml -r rancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
-#
-#up_lb_prd:
-#  stage: up_lb
-#  only:
-#    - master
-#  environment:
-#    name: prd
-#  when: manual
-#  script:
-#    - cd /opt/rancher-compose/lb
-#    - rm -rf $CI_PROJECT_NAME
-#    - mkdir $CI_PROJECT_NAME
-#    - cd $CI_PROJECT_NAME
-#    - echo -e "lb-$CI_PROJECT_NAME:" > LBdocker.yml
-#    - echo -e "  ports:" >> LBdocker.yml
-#    - echo -e "  - $EXPORT_LB_PORT:$CONTAINER_SERVICE_PORT" >> LBdocker.yml
-#    - echo -e "  labels:" >> LBdocker.yml
-#    - echo -e "    io.rancher.scheduler.affinity:host_label:\tlb=true" >> LBdocker.yml
-#    - echo -e "  tty:\ttrue" >> LBdocker.yml
-#    - echo -e "  image:\trancher/load-balancer-service" >> LBdocker.yml
-#    - echo -e "  links:" >> LBdocker.yml
-#    - echo -e "  - $CI_PROJECT_NAME:$CI_PROJECT_NAME" >> LBdocker.yml
-#    - echo -e "  stdin_open:\ttrue" >> LBdocker.yml
-#    - echo -e "lb-$CI_PROJECT_NAME:" >> LBrancher.yml
-#    - echo -e "  scale:\t1" >> LBrancher.yml
-#    - echo -e "  load_balancer_config:" >> LBrancher.yml
-#    - echo -e "    haproxy_config:\t{}" >> LBrancher.yml
-#    - echo -e "  health_check:" >> LBrancher.yml
-#    - echo -e "    port:\t42" >> LBrancher.yml
-#    - echo -e "    interval:\t2000" >> LBrancher.yml
-#    - echo -e "    unhealthy_threshold:\t3" >> LBrancher.yml
-#    - echo -e "    healthy_threshold:\t2" >> LBrancher.yml
-#    - echo -e "    response_timeout:\t2000" >> LBrancher.yml
-#    - ../../rancher-compose -f LBdocker.yml -r LBrancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
+deploy_dev:
+  stage: deploy
+  only:
+    - test
+  environment:
+    name: dev
+  when: manual
+  script:
+    - cd /opt/rancher-compose/
+    - rm -rf $CI_PROJECT_NAME
+    - mkdir $CI_PROJECT_NAME
+    - cd $CI_PROJECT_NAME
+    - echo "$CI_PROJECT_NAME:" > docker.yml
+    - echo "  labels:" >> docker.yml
+    - echo -e "    io.rancher.container.pull_image:\talways" >> docker.yml
+    - echo -e "  tty:\ttrue" >> docker.yml
+    - echo -e "  image:\t$DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME" >> docker.yml
+    - echo -e "  stdin_open:\ttrue" >> docker.yml
+    - echo "$CI_PROJECT_NAME:" > rancher.yml
+    - echo -e "  scale:\t$CONTAINER_SCALE" >> rancher.yml
+    - ../rancher-compose -f docker.yml -r rancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
+
+up_lb_dev:
+  stage: up_lb
+  only:
+    - test
+  environment:
+    name: dev
+  when: manual
+  script:
+    - cd /opt/rancher-compose/lb
+    - rm -rf $CI_PROJECT_NAME
+    - mkdir $CI_PROJECT_NAME
+    - cd $CI_PROJECT_NAME
+    - echo -e "lb-$CI_PROJECT_NAME:" > LBdocker.yml
+    - echo -e "  ports:" >> LBdocker.yml
+    - echo -e "  - $EXPORT_LB_PORT:$CONTAINER_SERVICE_PORT" >> LBdocker.yml
+    - echo -e "  labels:" >> LBdocker.yml
+    - echo -e "    io.rancher.scheduler.affinity:host_label:\tlb=true" >> LBdocker.yml
+    - echo -e "  tty:\ttrue" >> LBdocker.yml
+    - echo -e "  image:\trancher/load-balancer-service" >> LBdocker.yml
+    - echo -e "  links:" >> LBdocker.yml
+    - echo -e "  - $CI_PROJECT_NAME:$CI_PROJECT_NAME" >> LBdocker.yml
+    - echo -e "  stdin_open:\ttrue" >> LBdocker.yml
+    - echo -e "lb-$CI_PROJECT_NAME:" >> LBrancher.yml
+    - echo -e "  scale:\t1" >> LBrancher.yml
+    - echo -e "  load_balancer_config:" >> LBrancher.yml
+    - echo -e "    haproxy_config:\t{}" >> LBrancher.yml
+    - echo -e "  health_check:" >> LBrancher.yml
+    - echo -e "    port:\t42" >> LBrancher.yml
+    - echo -e "    interval:\t2000" >> LBrancher.yml
+    - echo -e "    unhealthy_threshold:\t3" >> LBrancher.yml
+    - echo -e "    healthy_threshold:\t2" >> LBrancher.yml
+    - echo -e "    response_timeout:\t2000" >> LBrancher.yml
+    - ../../rancher-compose -f LBdocker.yml -r LBrancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
+
+
+#prd environment
+package_prd:
+  stage: package
+  only:
+    - master
+  environment:
+    name: prd
+  when: manual
+  script:
+    - mvn clean package -Dmaven.test.skip=true
+  cache:
+    paths:
+      - ./target/*.jar
+  artifacts:
+    paths:
+      - ./target/*.jar
+
+build_image_prd:
+  stage: build_push_image
+  only:
+    - master
+  environment:
+    name: prd
+  when: manual
+  script:
+    - cd /$CI_PROJECT_DIR/target/
+    - echo "FROM openjdk:8-jre" > dockerfile
+    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
+    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
+    - docker build --no-cache -t $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME .
+    - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
+    - docker push $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME
+
+deploy_prd:
+  stage: deploy
+  only:
+    - master
+  environment:
+    name: prd
+  when: manual
+  script:
+    - cd /opt/rancher-compose/
+    - rm -rf $CI_PROJECT_NAME
+    - mkdir $CI_PROJECT_NAME
+    - cd $CI_PROJECT_NAME
+    - echo "$CI_PROJECT_NAME:" > docker.yml
+    - echo "  labels:" >> docker.yml
+    - echo -e "    io.rancher.container.pull_image:\talways" >> docker.yml
+    - echo -e "  tty:\ttrue" >> docker.yml
+    - echo -e "  image:\t$DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME" >> docker.yml
+    - echo -e "  stdin_open:\ttrue" >> docker.yml
+    - echo "$CI_PROJECT_NAME:" > rancher.yml
+    - echo -e "  scale:\t$CONTAINER_SCALE" >> rancher.yml
+    - ../rancher-compose -f docker.yml -r rancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
+
+up_lb_prd:
+  stage: up_lb
+  only:
+    - master
+  environment:
+    name: prd
+  when: manual
+  script:
+    - cd /opt/rancher-compose/lb
+    - rm -rf $CI_PROJECT_NAME
+    - mkdir $CI_PROJECT_NAME
+    - cd $CI_PROJECT_NAME
+    - echo -e "lb-$CI_PROJECT_NAME:" > LBdocker.yml
+    - echo -e "  ports:" >> LBdocker.yml
+    - echo -e "  - $EXPORT_LB_PORT:$CONTAINER_SERVICE_PORT" >> LBdocker.yml
+    - echo -e "  labels:" >> LBdocker.yml
+    - echo -e "    io.rancher.scheduler.affinity:host_label:\tlb=true" >> LBdocker.yml
+    - echo -e "  tty:\ttrue" >> LBdocker.yml
+    - echo -e "  image:\trancher/load-balancer-service" >> LBdocker.yml
+    - echo -e "  links:" >> LBdocker.yml
+    - echo -e "  - $CI_PROJECT_NAME:$CI_PROJECT_NAME" >> LBdocker.yml
+    - echo -e "  stdin_open:\ttrue" >> LBdocker.yml
+    - echo -e "lb-$CI_PROJECT_NAME:" >> LBrancher.yml
+    - echo -e "  scale:\t1" >> LBrancher.yml
+    - echo -e "  load_balancer_config:" >> LBrancher.yml
+    - echo -e "    haproxy_config:\t{}" >> LBrancher.yml
+    - echo -e "  health_check:" >> LBrancher.yml
+    - echo -e "    port:\t42" >> LBrancher.yml
+    - echo -e "    interval:\t2000" >> LBrancher.yml
+    - echo -e "    unhealthy_threshold:\t3" >> LBrancher.yml
+    - echo -e "    healthy_threshold:\t2" >> LBrancher.yml
+    - echo -e "    response_timeout:\t2000" >> LBrancher.yml
+    - ../../rancher-compose -f LBdocker.yml -r LBrancher.yml -p $CI_PROJECT_NAME up --force-upgrade --batch-size 1 --interval "30000" -d --confirm-upgrade
