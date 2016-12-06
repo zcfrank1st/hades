@@ -15,6 +15,10 @@ variables:
   EXPORT_LB_PORT: "1234"
   #容器侧访问端口号
   CONTAINER_SERVICE_PORT: "8080"
+  #包名
+  PACKAGE_NAME: "hades-web.jar"
+  #包路径(相对于项目根目录,以/开头)
+  PACKAGE_PATH: "/hades-web/build/libs"
 
 stages:
   - package
@@ -34,10 +38,10 @@ package_dev:
     - gradle :hades-web:bootRepackage
   cache:
     paths:
-      - ./hades-web/build/libs/*.jar
+      - .$PACKAGE_PATH/$PACKAGE_NAME
   artifacts:
     paths:
-      - ./hades-web/build/libs/*.jar
+      - .$PACKAGE_PATH/$PACKAGE_NAME
 
 build_image_dev:
   stage: build_push_image
@@ -46,10 +50,10 @@ build_image_dev:
   environment:
     name: dev
   script:
-    - cd /$CI_PROJECT_DIR/hades-web/build/libs/
+    - cd /$CI_PROJECT_DIR/$PACKAGE_PATH
     - echo "FROM openjdk:8-jre" > dockerfile
-    - echo "COPY hades-web.jar /opt" >> dockerfile
-    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
+    - echo "COPY $PACKAGE_NAME /opt" >> dockerfile
+    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$PACKAGE_NAME\"]" >> dockerfile
     - docker build --no-cache -t $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME .
     - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
     - docker push $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME
@@ -123,10 +127,10 @@ package_prd:
     - mvn clean package -Dmaven.test.skip=true
   cache:
     paths:
-      - ./target/*.jar
+      - .$PACKAGE_PATH/$PACKAGE_NAME
   artifacts:
     paths:
-      - ./target/*.jar
+      - .$PACKAGE_PATH/$PACKAGE_NAME
 
 build_image_prd:
   stage: build_push_image
@@ -136,10 +140,10 @@ build_image_prd:
     name: prd
   when: manual
   script:
-    - cd /$CI_PROJECT_DIR/target/
+    - cd /$CI_PROJECT_DIR/$PACKAGE_PATH
     - echo "FROM openjdk:8-jre" > dockerfile
-    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
-    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
+    - echo "COPY $PACKAGE_NAME /opt" >> dockerfile
+    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$PACKAGE_NAME\"]" >> dockerfile
     - docker build --no-cache -t $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME .
     - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
     - docker push $DOCKER_REPOSITORY_PRD/$CI_PROJECT_NAME
