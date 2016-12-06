@@ -30,6 +30,7 @@ package_dev:
   environment:
     name: dev
   script:
+    - gradle :hades-web:clean
     - gradle :hades-web:bootRepackage
   cache:
     paths:
@@ -38,21 +39,21 @@ package_dev:
     paths:
       - ./hades-web/build/libs/*.jar
 
-#build_image_dev:
-#  stage: build_push_image
-#  only:
-#    - test
-#  environment:
-#    name: dev
-#  script:
-#    - cd /$CI_PROJECT_DIR/target/
-#    - echo "FROM openjdk:8-jre" > dockerfile
-#    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
-#    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
-#    - docker build --no-cache -t $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME .
-#    - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
-#    - docker push $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME
-#
+build_image_dev:
+  stage: build_push_image
+  only:
+    - test
+  environment:
+    name: dev
+  script:
+    - cd /$CI_PROJECT_DIR/hades-web/build/libs/
+    - echo "FROM openjdk:8-jre" > dockerfile
+    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
+    - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
+    - docker build --no-cache -t $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME .
+    - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
+    - docker push $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME
+
 #deploy_dev:
 #  stage: deploy
 #  only:
