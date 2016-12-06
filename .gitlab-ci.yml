@@ -48,7 +48,7 @@ build_image_dev:
   script:
     - cd /$CI_PROJECT_DIR/hades-web/build/libs/
     - echo "FROM openjdk:8-jre" > dockerfile
-    - echo "COPY $CI_PROJECT_NAME.jar /opt" >> dockerfile
+    - echo "COPY hades-web.jar /opt" >> dockerfile
     - echo "CMD [\"java\",\"-Dfile.encoding=UTF-8\",\"-Duser.timezone=Asia/Shanghai\",\"-jar\",\"/opt/$CI_PROJECT_NAME.jar\"]" >> dockerfile
     - docker build --no-cache -t $DOCKER_REPOSITORY_DEV/$CI_PROJECT_NAME .
     - docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi
