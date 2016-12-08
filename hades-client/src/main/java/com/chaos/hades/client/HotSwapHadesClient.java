@@ -38,12 +38,12 @@ public class HotSwapHadesClient implements HadesClient {
 
                         configs.put(addKey, new String(event.getData().getData(), "UTF-8"));
                         break;
-                    case NODE_REMOVED:
-                        String[] removeKeySegments = event.getData().getPath().split("/");
-                        String removeKey = removeKeySegments[removeKeySegments.length - 1];
-
-                        configs.remove(removeKey);
-                        break;
+//                    case NODE_REMOVED:
+//                        String[] removeKeySegments = event.getData().getPath().split("/");
+//                        String removeKey = removeKeySegments[removeKeySegments.length - 1];
+//
+//                        configs.remove(removeKey);
+//                        break;
                     default:
                         break;
                 }
